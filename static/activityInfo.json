@@ -1,0 +1,67 @@
+{"success": true,
+  "data": {
+    "name": "大国方略",
+    "date": ["2020-01-01", "2020-02-15"],
+    "classId": [
+      {
+        "id": "1",
+        "name": "jkg"
+      },
+      {
+        "id": 2,
+        "name": "fasdasdf"
+      },
+      {
+        "id": 3,
+        "name": "agrgr"
+      },
+      {
+        "id": 5,
+        "name": "agfd"
+      },
+      {
+        "id": 4,
+        "name": "yu"
+      }
+    ],
+    "capacity": 16,
+    "teachers": "王老师",
+    "records": [
+      {
+        "actdata": "2020-01-03",
+        "actiId": 5,
+        "category": 1,
+        "weight": 1,
+        "memo": ""
+      },
+      {
+        "actdata": "2020-01-14",
+        "actiId": 1,
+        "category": 3,
+        "weight": 1,
+        "memo": ""
+      },
+      {
+        "actdata": "2020-01-20",
+        "actiId": 3,
+        "category": 1,
+        "weight": 1,
+        "memo": ""
+      },
+      {
+        "actdata": "2020-02-12",
+        "actiId": 4,
+        "category": 3,
+        "weight": 1,
+        "memo": ""
+      },
+      {
+        "actdata": "2020-01-19",
+        "actiId": 2,
+        "category": 2,
+        "weight": 1,
+        "memo": ""
+      }
+    ]
+}
+}

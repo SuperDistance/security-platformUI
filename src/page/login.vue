@@ -14,6 +14,9 @@
           <FormItem>
             <input class="btn" type="button" @click="handleSubmit('formInline')" value="Login" />
           </FormItem>
+        <FormItem>
+          <input class="btn" type="button" @click="handleVisitor" value="Visitor" />
+        </FormItem>
       </Form>
     </div>
 </template>
@@ -43,13 +46,36 @@ export default {
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          document.querySelector('body').setAttribute('style', 'background:#fff')// 背景变白
-          this.$Message.success('Success!')
-          this.$router.push({path: '/base'})
+          this.login(undefined)
         } else {
           this.$Message.error('Fail!')
         }
       })
+    },
+    login (form) {
+      if (form === undefined) {
+        form = {username: this.formInline.user, password: this.formInline.password}
+      }
+      console.log('data to post: ' + form)
+      this.$api.post('/login', form, r => {
+        console.log('frontend: ')
+        console.log(r)
+        if (r.data.success === true) {
+          document.querySelector('body').setAttribute('style', 'background:#fff')// 背景变白
+          this.$store.commit('set_token', r.headers.authorization)
+          // this.$store.commit('setUserInfo', r.data.username)
+          if (this.$store.state.token !== '') {
+            this.$router.push({path: '/base'})
+            this.$Message.success('Success!')
+          }
+        } else {
+          this.$Message.error('Fail! ' + r.errorMsg)
+          this.$router.replace({path: '/login'})
+        }
+      })
+    },
+    handleVisitor () {
+      this.login({username: 'user1', password: '123456'})
     }
   }
 }

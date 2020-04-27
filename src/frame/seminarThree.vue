@@ -1,8 +1,10 @@
 <template>
   <Layout>
     <Sider hide-trigger :style="{background: '#fff'}">
-      <Menu active-name="1-1" theme="light" width="auto" :open-names="['1']">
-        <MenuItem name="1-1" to = '/select'>选择活动</MenuItem>
+      <Menu active-name="2-1" theme="light" width="auto" :open-names="['1']">
+        <MenuItem name="2-1" to = '/exp1'>sql注入</MenuItem>
+        <MenuItem name="2-2" to = '/exp2'>xss注入</MenuItem>
+        <MenuItem name="2-3" to = '/exp3'>用户信息</MenuItem>
       </Menu>
     </Sider>
     <Layout :style="{padding: '0 24px 24px'}">

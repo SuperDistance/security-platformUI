@@ -136,9 +136,14 @@ export default {
   methods: {
     postData () {
       this.$api.get('/seminar1/exp2', {method: this.messageInfo.category, enc: this.frontendEncryption, iv: this.iv, key: this.publicKey}, r => {
-        this.backendDecryption = r[0]
-        this.backendTime = r[1]
-        this.$Message.success('Success!')
+        r = r.data
+        if (r.success === true) {
+          this.backendDecryption = r.data[0]
+          this.backendTime = r.data[1]
+          this.$Message.success('Success!')
+        } else {
+          this.$Message.error('Fail! ' + r.errorMsg)
+        }
       })
     },
     handleSubmit () { // 带''是字符串, 不带传入Object

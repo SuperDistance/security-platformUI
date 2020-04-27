@@ -211,7 +211,8 @@ export default {
         publicKey: this.userInfo.publicKey,
         cirtiSign: this.signatureOfCir,
         signature: this.signatureOfText}, r => {
-        this.result = r
+        r = r.data
+        this.result = r.data
         this.next()
         if (this.result.indexOf('未') === -1) {
           this.currentStatus = 'error'
@@ -249,20 +250,26 @@ export default {
         endTime: this.Certificate.endTime,
         encryMethod: this.Certificate.encryptMethod,
         publicKey: this.userInfo.publicKey}, r => {
+        r = r.data
         this.signatureOfCir = r
         this.isFetched = !this.isFetched
       })
     },
     getKeys () {
       this.$api.get('/seminar1/exp41', null, r => {
-        this.userInfo.publicKey = r[0]
-        this.CAPublicKey = r[1]
+        r = r.data
+        if (r.success === true) {
+          this.userInfo.publicKey = r.data[0]
+          this.CAPublicKey = r.data[1]
+        } else {
+        }
       })
     },
     getTextSignature () {
       this.textSignatureIsFetched = true
       this.buttonText = '点击重新生成'
       this.$api.get('/seminar1/exp43', {contents: this.toEncryText}, r => {
+        r = r.data
         this.signatureOfText = r
       })
     },

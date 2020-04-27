@@ -92,9 +92,14 @@ export default {
   methods: {
     postData () {
       this.$api.get('/seminar1/exp1', { toEncry: this.messageInfo.message, method: this.messageInfo.category }, r => {
-        this.digest = r
-        console.log(this.digest)
-        this.$Message.success('Success!')
+        r = r.data
+        if (r.success === true) {
+          this.digest = r.data
+          console.log(this.digest)
+          this.$Message.success('Success!')
+        } else {
+          this.$Message.error('Fail! ' + r.errorMsg)
+        }
       })
     },
     handleSubmit (name) { // 带''是字符串, 不带传入Object

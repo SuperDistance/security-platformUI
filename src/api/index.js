@@ -1,12 +1,50 @@
 
 // 配置API接口地址
 
-// var root = './static/'var root = 'http://localhost:8085/'
-// build
-var root = 'http://123.56.18.26:8080/security/'
+// var root = './static/'
+var root = 'http://localhost:8090'
+// build var root = 'http://123.56.18.26:8080/security/'
 // 引用axios
 
 var axios = require('axios')
+
+axios.interceptors.request.use(
+  config => {
+    // add token into header
+    let token = localStorage.getItem('token')
+    console.log(token)
+    if (token !== undefined) {
+      config.headers.authorization = token
+      console.log('Success!')
+    }
+    return config
+  },
+  error => {
+    console.log(error)
+    return Promise.reject(error)
+  }
+)
+
+// response interceptor
+axios.interceptors.response.use(
+  response => {
+    return response
+  },
+  error => {
+    console.log(error)
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          this.$store.commit('del_token')
+          this.$router.replace({
+            path: '/login',
+            query: { redirect: this.$router.currentRoute.fullPath } // jump to original page
+          })
+      }
+    }
+    return Promise.reject(error.response)
+  }
+)
 
 // 自定义判断元素类型JS
 
@@ -16,8 +54,9 @@ function toType (obj) {
 
 // 参数过滤函数
 
+// eslint-disable-next-line no-unused-vars
 function filterNull (o) {
-  for (var key in o) {
+  for (const key in o) {
     if (o[key] === null) {
       delete o[key]
     }
@@ -54,7 +93,7 @@ function filterNull (o) {
 
 function apiAxios (method, url, params, success, failure) {
   if (params) {
-    params = filterNull(params)
+    // params = filterNull(params)
   }
 
   axios({
@@ -74,14 +113,16 @@ function apiAxios (method, url, params, success, failure) {
   })
 
     .then(function (res) {
-      if (res.status !== 404) {
-        console.log(res)
+      console.log(res)
+      console.log(res.data)
+      if (res.status === 200) {
+        console.log(res.data)
         if (success) {
-          success(res.data)
+          success(res)
         }
       } else {
         if (failure) {
-          failure(res.data)
+          failure(res)
         } else {
           window.alert('error: ' + JSON.stringify(res.data))
         }
@@ -90,9 +131,8 @@ function apiAxios (method, url, params, success, failure) {
 
     .catch(function (err) {
       // let res = err.response
-
       if (err) {
-        // window.alert('api error, HTTP CODE: ' + res.status)
+        window.alert('api error, HTTP CODE: ' + err)
       }
     })
 }

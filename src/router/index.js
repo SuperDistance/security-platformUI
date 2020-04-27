@@ -8,6 +8,8 @@ import AsymmetricEncryption from '../components/AsymmetricEncryption'
 import DigitalCertificate from '../components/DigitalCertificate'
 
 import seminarThreeBase from '../frame/seminarThree'
+import SQLInjection from '../components/SQLInjection'
+import userInfo from '../components/userInfo'
 
 import seminarFourBase from '../frame/seminarFour'
 
@@ -31,8 +33,9 @@ const seminarOneRouter = new VueRouter({
 const seminarThreeRouter = new VueRouter({
   mode: 'abstract',
   routes: [
-    { path: '/list', component: MessageDigest },
-    { path: '/', redirect: '/list' }
+    { path: '/exp1', component: SQLInjection },
+    { path: '/exp2', redirect: '/list' },
+    { path: '/exp3', component: userInfo }
   ]
 })
 
@@ -73,9 +76,12 @@ export default new VueRouter({
       children: [
         { path: '/', redirect: '/seminar1' },
         { path: '/seminar1', component: seminarOneNested },
-        { path: '/seminar2', component: seminarThreeNested },
-        { path: '/seminar3', component: seminarFourNested }
-      ]
+        { path: '/seminar3', component: seminarThreeNested },
+        { path: '/seminar4', component: seminarFourNested }
+      ],
+      meta: {
+        requireAuth: true
+      }
     },
     { path: '/login', component: login },
     { path: '/', redirect: '/login' }

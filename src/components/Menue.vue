@@ -9,13 +9,16 @@
             <Icon  type="ios-navigate"></Icon>
             研讨一
           </MenuItem>
-          <MenuItem name="2" to = "/serminar2">
+          <MenuItem name="2" to = "/seminar3">
             <Icon type="ios-keypad"></Icon>
             研讨三
           </MenuItem>
-          <MenuItem name="3" to = "/serminar3">
-            <Icon type="ios-analytics"></Icon>
+          <MenuItem name="2" to = "/seminar4">
+            <Icon type="ios-keypad"></Icon>
             研讨四
+          </MenuItem>
+          <MenuItem name="4">
+            <Icon  size=30 type="md-log-out" class="layout-exit" @click = "handleLogout">Exit</Icon>
           </MenuItem>
         </div>
       </Menu>
@@ -25,7 +28,23 @@
 </template>
 <script>
 export default {
-  name: 'Menue'
+  name: 'Menue',
+  methods: {
+    handleLogout () {
+      this.$api.post('/logout', null, r => {
+        r = r.data
+        console.log(r)
+        if (r.success === true) {
+          this.$store.commit('del_token')
+          this.$Message.success('Success: Log out!')
+          this.$router.push({path: '/login'})
+          document.querySelector('body').removeAttribute('style')// 恢复背景
+        } else {
+          this.$Message.error('Fail! ' + r.errorMsg)
+        }
+      })
+    }
+  }
 }
 </script>
 <style scoped>
@@ -47,9 +66,16 @@ export default {
     left: 20px;
   }
   .layout-nav{
-    width: 420px;
+    width: 500px;
     margin: 0 auto;
     margin-right: 20px;
   }
-
+  .layout-exit{
+    width: 40px;
+    height: 40px;
+    float: right;
+    position: relative;
+    top: 15px;
+    left: 20px;
+  }
 </style>

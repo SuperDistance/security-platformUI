@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
 import ViewUI from 'view-design'
 import './style/scss/index.less'
 import 'view-design/dist/styles/iview.css'
@@ -13,6 +14,7 @@ import api from './api/index.js'
 // 将API方法绑定到全局
 Vue.prototype.$api = api
 Vue.prototype.qs = Qs
+Vue.prototype.$store = store
 
 Vue.config.productionTip = false
 
@@ -23,6 +25,7 @@ Vue.use(ViewUI)
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

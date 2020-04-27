@@ -194,9 +194,14 @@ export default {
   methods: {
     postData () {
       this.$api.get('/seminar1/exp32', {enc: this.frontendEncryption}, r => {
-        this.backendDecryption = r[0]
-        this.backendTime = r[1]
-        this.$Message.success('Success!')
+        r = r.data
+        if (r.success === true) {
+          this.backendDecryption = r.data[0]
+          this.backendTime = r.data[1]
+          this.$Message.success('Success!')
+        } else {
+          this.$Message.error('Fail! ' + r.errorMsg)
+        }
       })
     },
     handleSubmit () { // 带''是字符串, 不带传入Object
@@ -219,6 +224,7 @@ export default {
       this.progress = 0
       this.loading = true
       this.$api.get('/seminar1/exp31', null, r => {
+        r = r.data
         this.publicKey = r
         this.isGenerate = true
         this.loading = false

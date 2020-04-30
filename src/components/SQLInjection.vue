@@ -7,7 +7,7 @@
     <Form ref="messageInfo" :model="messageInfo" label-position="left" :label-width="100">
       <FormItem label="输入命令:">
           <AutoComplete
-            v-model="value4"
+            v-model="messageInfo.sql"
             icon="ios-search"
             placeholder="input here"
             style="width:300px">
@@ -104,11 +104,13 @@ export default {
   },
   methods: {
     postData () {
-      this.$api.get('/seminar3/exp1', { toExcute: this.messageInfo.sql }, r => {
-        if (r.sucess === true) {
-          this.feedbackMessage = r.feedbackMessage
-          this.status = r.status
-          this.backendTime = r.backendTime
+      console.log(this.$qs.stringify({ sql: this.messageInfo.sql }))
+      this.$api.post('/seminar3/exp1', this.$qs.stringify({ sql: this.messageInfo.sql }), r => {
+        r = r.data
+        if (r.success === true) {
+          this.feedbackMessage = r.data
+          this.status = r.success
+          this.backendTime = 1 // r.backendTime
           console.log(this.feedbackMessage)
           this.$Message.success('Success!')
         } else {

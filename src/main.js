@@ -13,7 +13,7 @@ import Qs from 'qs'
 import api from './api/index.js'
 // 将API方法绑定到全局
 Vue.prototype.$api = api
-Vue.prototype.qs = Qs
+Vue.prototype.$qs = Qs
 Vue.prototype.$store = store
 
 Vue.config.productionTip = false

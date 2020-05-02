@@ -3,7 +3,9 @@
   <Layout class="layout">
     <Header>
       <Menu mode="horizontal" theme="dark" active-name="1">
+        <div @click = "handleManage">
         <Icon size=40 type="ios-contacts-outline" class="layout-logo"/>
+        </div>
         <div class="layout-nav">
           <MenuItem name="1" to = "/seminar1">
             <Icon  type="ios-navigate"></Icon>
@@ -43,6 +45,9 @@ export default {
           this.$Message.error('Fail! ' + r.errorMsg)
         }
       })
+    },
+    handleManage () {
+      this.$router.push({path: '/manage'})
     }
   }
 }

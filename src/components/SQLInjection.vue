@@ -5,7 +5,7 @@
     </div>
     <h2>前端</h2>
     <Form ref="messageInfo" :model="messageInfo" label-position="left" :label-width="100">
-      <FormItem label="输入命令:">
+      <FormItem label="User ID:">
           <AutoComplete
             v-model="messageInfo.sql"
             icon="ios-search"

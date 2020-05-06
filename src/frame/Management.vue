@@ -1,10 +1,11 @@
 <template>
   <Layout>
     <Sider hide-trigger :style="{background: '#fff'}">
-      <Menu active-name="4-1" theme="light" width="auto" :open-names="['1']">
-        <MenuItem name="4-1" to = '/user'>用户管理</MenuItem>
-        <MenuItem name="4-2" to = '/role'>角色管理</MenuItem>
-        <MenuItem name="4-3" to = '/user'>权限管理</MenuItem>
+      <Menu active-name="1-1" theme="light" width="auto" :open-names="['1']">
+        <MenuItem name="1-1" to = '/user'>用户管理</MenuItem>
+        <MenuItem name="1-2" to = '/role'>角色管理</MenuItem>
+        <MenuItem name="1-3" to = '/permission'>权限管理</MenuItem>
+        <MenuItem name="1-4" to = '/path'>路径管理</MenuItem>
       </Menu>
     </Sider>
     <Layout :style="{padding: '0 24px 24px'}">

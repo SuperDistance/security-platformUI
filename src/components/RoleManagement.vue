@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2> User Info <Button @click="addRole = !addRole" type="primary" size="large"><h2> + </h2></Button></h2>
+    <h2> Role Info <Button @click="addRole = !addRole" type="primary" size="large"><h2> + </h2></Button></h2>
     <Table row-key="id" :columns="roleColumns" :data="roleList" border>
       <template slot-scope="{ row, index }" slot="action">
         <Button v-if="!isNaN(row.id)" type="success" size="small" style="margin-right: 5px" @click="handleAddPermissionToRole(index)"><h3>   +   </h3></Button>
@@ -293,11 +293,12 @@ export default {
       this.$api.post('/rolePermissionByPermissionIds', this.$qs.stringify({roleId: this.recordToAdd.id, permissionIds: JSON.stringify(permissionIds)}), r => {
         if (r.data.success) {
           this.$Message.success('Update Role-Permission Relations Success!')
+          this.initiate()
         } else {
           this.$Message.error('Fail! ' + r.data.errorMsg)
         }
       })
-      this.initiate()
+      this.addPermissionToRole = !this.addPermissionToRole
     },
     handleReviseRole (index) {
       this.roleToRevise = this.roleList[index]
@@ -313,6 +314,7 @@ export default {
         } else {
           this.$Message.error('Fail! ' + r.errorMsg)
         }
+        this.reviseRole = !this.reviseRole
       })
     },
     handleDeleteRecord (recordId) {

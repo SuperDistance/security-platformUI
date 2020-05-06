@@ -4,6 +4,8 @@ import VueRouter from 'vue-router'
 import manageBase from '../frame/Management'
 import UserManagement from '../components/UserManagement'
 import RoleManagement from '../components/RoleManagement'
+import PermissionManagement from '../components/PermissionManagement'
+import PathManagement from '../components/PathManagement'
 
 import seminarOneBase from '../frame/seminarOne'
 import MessageDigest from '../components/MessageDigest'
@@ -56,7 +58,9 @@ const manageRouter = new VueRouter({
   routes: [
     { path: '/user', component: UserManagement },
     { path: '/role', component: RoleManagement },
-    { path: '/', redirect: '/list' }
+    { path: '/permission', component: PermissionManagement },
+    { path: '/path', component: PathManagement },
+    { path: '/', redirect: '/user' }
   ]
 })
 

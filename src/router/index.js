@@ -15,7 +15,7 @@ import DigitalCertificate from '../components/DigitalCertificate'
 
 import seminarThreeBase from '../frame/seminarThree'
 import SQLInjection from '../components/SQLInjection'
-import userInfo from '../components/userInfo'
+import XSSInjection from '../components/XSSInjection'
 
 import seminarFourBase from '../frame/seminarFour'
 
@@ -40,8 +40,7 @@ const seminarThreeRouter = new VueRouter({
   mode: 'abstract',
   routes: [
     { path: '/exp1', component: SQLInjection },
-    { path: '/exp2', redirect: '/list' },
-    { path: '/exp3', component: userInfo }
+    { path: '/exp2', component: XSSInjection }
   ]
 })
 

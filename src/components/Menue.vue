@@ -38,6 +38,7 @@ export default {
         console.log(r)
         if (r.success === true) {
           this.$store.commit('del_token')
+          this.$store.commit('delUserInfo')
           this.$Message.success('Success: Log out!')
           this.$router.push({path: '/login'})
           document.querySelector('body').removeAttribute('style')// 恢复背景

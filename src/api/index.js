@@ -2,9 +2,12 @@
 // 配置API接口地址
 
 // var root = './static/'
+import store from '../store'
+
 var root = 'http://localhost:8090'
 // build var root = 'http://123.56.18.26:8080/security/'
 // 引用axios
+const CryptoJS = require('crypto-js')
 
 var axios = require('axios')
 
@@ -26,8 +29,25 @@ axios.interceptors.request.use(
 )
 
 // response interceptor
+// put token-get process into interceptor so that it can be refreshed
 axios.interceptors.response.use(
   response => {
+    console.log(response)
+    if (response.headers.authorization !== undefined) {
+      let jwt = response.headers.authorization
+      store.commit('set_token', jwt)
+      // to get the username in the Payload
+      console.log('jwt ' + jwt)
+      let encryptedPayload = jwt.split('.')[1]
+      console.log('Payload ' + encryptedPayload)
+      let parsedWordArray = CryptoJS.enc.Base64.parse(encryptedPayload)
+      let decryptedPayload = parsedWordArray.toString(CryptoJS.enc.Utf8)
+      console.log('decrypted Payload ' + decryptedPayload)
+      // payload contains: iss（issuer），exp（expired time），sub（subscribe），aud（audience），iat（issue at time）
+      let userInfo = JSON.parse(decryptedPayload)
+      console.log('Payload object' + encryptedPayload)
+      store.commit('setUserInfo', userInfo.sub)
+    }
     return response
   },
   error => {

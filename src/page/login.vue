@@ -62,14 +62,13 @@ export default {
         console.log(r)
         if (r.data.success === true) {
           document.querySelector('body').setAttribute('style', 'background:#fff')// 背景变白
-          this.$store.commit('set_token', r.headers.authorization)
           // this.$store.commit('setUserInfo', r.data.username)
           if (this.$store.state.token !== '') {
             this.$router.push({path: '/base'})
             this.$Message.success('Success!')
           }
         } else {
-          this.$Message.error('Fail! ' + r.errorMsg)
+          this.$Message.error('Fail! ' + r.data.errorMsg)
           this.$router.replace({path: '/login'})
         }
       })

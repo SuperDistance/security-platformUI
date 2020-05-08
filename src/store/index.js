@@ -18,6 +18,11 @@ const store = new Vuex.Store({
     },
     setUserInfo (state, username) {
       state.username = username
+      localStorage.setItem('username', username)
+    },
+    delUserInfo (state, username) {
+      state.username = ''
+      localStorage.removeItem('username')
     }
   }
 })

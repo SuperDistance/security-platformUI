@@ -129,8 +129,7 @@ export default {
         },
         {
           title: 'Description',
-          key: 'roleDescription',
-          width: 220
+          key: 'roleDescription'
         },
         {
           title: 'Action',

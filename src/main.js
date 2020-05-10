@@ -4,10 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import ViewUI from 'view-design'
-import './style/scss/index.less'
-import 'view-design/dist/styles/iview.css'
 import Qs from 'qs'
+import './plugins/iview.js'
 
 // 引用API文件
 import api from './api/index.js'
@@ -18,14 +16,10 @@ Vue.prototype.$store = store
 
 Vue.config.productionTip = false
 
-//  全局注册组件
-Vue.use(ViewUI)
-
 // eslint-disable-next-line no-new
 new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
-  template: '<App/>'
-})
+  render: h => h(App)
+}).$mount('#app')

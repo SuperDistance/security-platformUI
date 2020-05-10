@@ -193,7 +193,7 @@ export default {
   },
   methods: {
     postData () {
-      this.$api.get('/seminar1/exp32', {enc: this.frontendEncryption}, r => {
+      this.$api.get('/seminar1/exp32', { enc: this.frontendEncryption }, r => {
         r = r.data
         if (r.success === true) {
           this.backendDecryption = r.data[0]
@@ -210,7 +210,7 @@ export default {
       this.postData()
     },
     handleReset () {
-      this.$refs['messageInfo'].resetFields()
+      this.$refs.messageInfo.resetFields()
       this.messageInfo = []
       this.frontendEncryption = ''
       this.frontendTime = ''

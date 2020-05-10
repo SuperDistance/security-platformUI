@@ -5,7 +5,7 @@
 import store from '../store'
 
 var root = 'http://localhost:8090'
-// build var root = 'http://123.56.18.26:8080/security/'
+// build
 // 引用axios
 const CryptoJS = require('crypto-js')
 
@@ -14,7 +14,7 @@ var axios = require('axios')
 axios.interceptors.request.use(
   config => {
     // add token into header
-    let token = localStorage.getItem('token')
+    const token = localStorage.getItem('token')
     console.log(token)
     if (token !== undefined) {
       config.headers.authorization = token
@@ -34,17 +34,17 @@ axios.interceptors.response.use(
   response => {
     console.log(response)
     if (response.headers.authorization !== undefined) {
-      let jwt = response.headers.authorization
+      const jwt = response.headers.authorization
       store.commit('set_token', jwt)
       // to get the username in the Payload
       console.log('jwt ' + jwt)
-      let encryptedPayload = jwt.split('.')[1]
+      const encryptedPayload = jwt.split('.')[1]
       console.log('Payload ' + encryptedPayload)
-      let parsedWordArray = CryptoJS.enc.Base64.parse(encryptedPayload)
-      let decryptedPayload = parsedWordArray.toString(CryptoJS.enc.Utf8)
+      const parsedWordArray = CryptoJS.enc.Base64.parse(encryptedPayload)
+      const decryptedPayload = parsedWordArray.toString(CryptoJS.enc.Utf8)
       console.log('decrypted Payload ' + decryptedPayload)
       // payload contains: iss（issuer），exp（expired time），sub（subscribe），aud（audience），iat（issue at time）
-      let userInfo = JSON.parse(decryptedPayload)
+      const userInfo = JSON.parse(decryptedPayload)
       console.log('Payload object' + encryptedPayload)
       store.commit('setUserInfo', userInfo.sub)
     }
@@ -134,9 +134,7 @@ function apiAxios (method, url, params, success, failure) {
 
     .then(function (res) {
       console.log(res)
-      console.log(res.data)
       if (res.status === 200) {
-        console.log(res.data)
         if (success) {
           success(res)
         }
@@ -152,7 +150,7 @@ function apiAxios (method, url, params, success, failure) {
     .catch(function (err) {
       // let res = err.response
       if (err) {
-        window.alert('api error, HTTP CODE: ' + err)
+        window.alert('api error, HTTP CODE: ' + err.status + '\nerror Message: ' + err.data.message)
       }
     })
 }

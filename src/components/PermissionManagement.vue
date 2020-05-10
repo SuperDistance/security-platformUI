@@ -147,13 +147,13 @@ export default {
       PermissionToRevise: '',
       ruleInline: {
         name: [
-          {required: true, message: 'Please enter name', trigger: 'change'}
+          { required: true, message: 'Please enter name', trigger: 'change' }
         ],
         code: [
-          {required: true, message: 'Please enter code', trigger: 'change'}
+          { required: true, message: 'Please enter code', trigger: 'change' }
         ],
         description: [
-          {required: true, message: 'Please enter description', trigger: 'change'}
+          { required: true, message: 'Please enter description', trigger: 'change' }
         ]
       }
     }
@@ -167,16 +167,24 @@ export default {
     },
     getPermission () {
       this.$api.get('/permission', null, r => {
-        this.permissionList = r.data.data
-        this.getPath()
-        console.log('permission list ' + JSON.stringify(this.permissionList))
+        if (r.data.success === true) {
+          this.permissionList = r.data.data
+          this.getPath()
+          console.log('permission list ' + JSON.stringify(this.permissionList))
+        } else {
+          this.$Message.error('Fail! ' + r.data.errorMsg)
+        }
       })
     },
     getPath () {
       this.$api.get('/path', null, r => {
-        this.pathList = r.data.data
-        this.getPermissionPathRelation()
-        console.log('permission list ' + JSON.stringify(this.pathList))
+        if (r.data.success === true) {
+          this.pathList = r.data.data
+          this.getPermissionPathRelation()
+          console.log('permission list ' + JSON.stringify(this.pathList))
+        } else {
+          this.$Message.error('Fail! ' + r.data.errorMsg)
+        }
       })
     },
     getPermissionPathRelation () {
@@ -212,14 +220,16 @@ export default {
         }
       }
       console.log('PermissionIndex: ' + PermissionIndex)
-      for (let item of this.pathList) {
+      for (const item of this.pathList) {
         if (item.id === urlId) {
           console.log(JSON.stringify(item))
-          this.permissionList[PermissionIndex].children.push({id: 'Path Id: ' + item.id,
+          this.permissionList[PermissionIndex].children.push({
+            id: 'Path Id: ' + item.id,
             permissionName: 'URL: ',
             permissionCode: item.url,
             permissionDescription: item.description + '\n Record Id: ' + recordId,
-            recordId: recordId})
+            recordId: recordId
+          })
         }
         console.log(JSON.stringify(this.permissionList))
       }
@@ -227,7 +237,7 @@ export default {
     handleAddPathToPermission (index) {
       this.recordToAdd = this.permissionList[index]
       this.$set(this.recordToAdd, 'paths', [])
-      for (let item of this.recordToAdd.children) {
+      for (const item of this.recordToAdd.children) {
         this.recordToAdd.paths.push(item.permissionCode)
       }
       this.addRecord = !this.addRecord
@@ -235,23 +245,23 @@ export default {
     handleAddPermissionToRole (index) {
       this.recordToAdd = this.roleList[index]
       this.$set(this.recordToAdd, 'paths', [])
-      for (let item of this.recordToAdd.children) {
+      for (const item of this.recordToAdd.children) {
         this.recordToAdd.paths.push(item.permissionCode)
       }
       this.addPermissionToRole = !this.addPermissionToRole
     },
     postRecord () {
       console.log('record to add ' + JSON.stringify(this.recordToAdd))
-      let pathIds = []
-      for (let record of this.recordToAdd.paths) {
-        for (let path of this.pathList) {
+      const pathIds = []
+      for (const record of this.recordToAdd.paths) {
+        for (const path of this.pathList) {
           if (record === path.url) {
             pathIds.push(path.id)
             break
           }
         }
       }
-      this.$api.post('/pathPermissionByPathIds', this.$qs.stringify({permissionId: this.recordToAdd.id, pathIds: JSON.stringify(pathIds)}), r => {
+      this.$api.post('/pathPermissionByPathIds', this.$qs.stringify({ permissionId: this.recordToAdd.id, pathIds: JSON.stringify(pathIds) }), r => {
         if (r.data.success) {
           this.$Message.success('Update Permission-Path Relations Success!')
           this.initiate()
@@ -264,7 +274,8 @@ export default {
     handleAddPermission () {
       this.$api.post('/permission', this.$qs.stringify({
         permissionName: this.permissionToAdd.permissionName,
-        permissionCode: this.permissionToAdd.permissionCode}), r => {
+        permissionCode: this.permissionToAdd.permissionCode
+      }), r => {
         if (r.data.success === true) {
           this.$Message.success('Success!')
           this.initiate()
@@ -278,8 +289,8 @@ export default {
       this.revisePermission = !this.revisePermission
     },
     handlePermissionRevise () {
-      let data = this.permissionToRevise
-      this.$api.put('/role', this.$qs.stringify({id: data.id, permissionName: data.roleName, permissionCode: data.permissionCode}), r => {
+      const data = this.permissionToRevise
+      this.$api.put('/role', this.$qs.stringify({ id: data.id, permissionName: data.roleName, permissionCode: data.permissionCode }), r => {
         r = r.data
         if (r.success === true) {
           this.$Message.success('Revise permission Success !')
@@ -291,8 +302,8 @@ export default {
       })
     },
     handleDeleteRecord (recordId) {
-      console.log('To post record Id: ' + this.$qs.stringify({id: recordId}))
-      this.$api.delete('/pathPermission', {id: recordId}, r => {
+      console.log('To post record Id: ' + this.$qs.stringify({ id: recordId }))
+      this.$api.delete('/pathPermission', { id: recordId }, r => {
         if (r.data.success === true) {
           this.$Message.success('Delete Path Success!')
           this.initiate()

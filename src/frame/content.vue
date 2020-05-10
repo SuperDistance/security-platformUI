@@ -102,8 +102,8 @@ export default {
   watch: {
     cardInfo: {
       handler (newName, oldName) {
-        let index = this.list.map(function (e) { return e.cardInfo }).indexOf(newName)
-        let already = this.completed.map(function (e) { return e.cardInfo }).indexOf(newName)
+        const index = this.list.map(function (e) { return e.cardInfo }).indexOf(newName)
+        const already = this.completed.map(function (e) { return e.cardInfo }).indexOf(newName)
         if (index !== -1) {
           this.checkInStudent(index)
           this.cardInfo = []
@@ -116,18 +116,18 @@ export default {
   },
   methods: {
     getData () {
-      this.$api.get('studlist.json', {actiId: this.actiId, Unsigned: true}, r => {
+      this.$api.get('studlist.json', { actiId: this.actiId, Unsigned: true }, r => {
         this.list = r.data
       })
-      this.$api.get('studlist2.json', {actiId: this.actiId, Unsigned: false}, r => {
+      this.$api.get('studlist2.json', { actiId: this.actiId, Unsigned: false }, r => {
         this.completed = r.data
       })
     },
     // 原生javascript 点击事件绑定
     checkInStudent: function (id) {
       // post更改
-      let temp = this.list[id]
-      this.$api.post('/toSignUp/update', {isSigned: false, stuId: temp.id, actId: this.actiId, score: 1}, r => {
+      const temp = this.list[id]
+      this.$api.post('/toSignUp/update', { isSigned: false, stuId: temp.id, actId: this.actiId, score: 1 }, r => {
         this.success = r.success
       })
       if (this.success) { //
@@ -138,8 +138,8 @@ export default {
     },
     checkOutStudent: function (id) {
       // post更改
-      let temp = this.completed[id]
-      this.$api.post('/toSignUp/update', {isSigned: true, stuId: temp.id, actId: this.actiId, score: 1}, r => {
+      const temp = this.completed[id]
+      this.$api.post('/toSignUp/update', { isSigned: true, stuId: temp.id, actId: this.actiId, score: 1 }, r => {
         this.success = r.success
       })
       if (this.success) { //

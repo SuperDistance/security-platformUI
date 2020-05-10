@@ -220,19 +220,19 @@ export default {
       roleList: [],
       ruleInline: {
         account: [
-          {required: true, message: 'Please enter account', trigger: 'blur'}
+          { required: true, message: 'Please enter account', trigger: 'blur' }
         ],
         userName: [
-          {required: true, message: 'Please enter username', trigger: 'blur'}
+          { required: true, message: 'Please enter username', trigger: 'blur' }
         ],
         rawPassword: [
-          {required: false, message: 'Please enter password', trigger: 'blur'}
+          { required: false, message: 'Please enter password', trigger: 'blur' }
         ],
         nowPassword: [
-          {validator: validatePassword, trigger: 'blur'}
+          { validator: validatePassword, trigger: 'blur' }
         ],
         role: [
-          {required: true, message: 'Please select a role', trigger: 'blur'}
+          { required: true, message: 'Please select a role', trigger: 'blur' }
         ]
       }
     }
@@ -245,7 +245,7 @@ export default {
       this.getUserNum() // step1-4
     },
     getUserList () {
-      this.$api.get('/getUser', {pageNo: this.pageNo, pageSize: this.pageSize}, r => {
+      this.$api.get('/getUser', { pageNo: this.pageNo, pageSize: this.pageSize }, r => {
         r = r.data
         if (r.success === true) {
           this.userList = r.data.records
@@ -262,6 +262,8 @@ export default {
         if (r.success === true) {
           this.userNum = parseInt(r.data)
           this.getUserList() // step2
+        } else {
+          this.$Message.error('Fail! ' + r.errorMsg)
         }
       })
     },
@@ -274,10 +276,14 @@ export default {
       this.getUserList()
     },
     getRoles () {
-      this.$api.get('/role', null, r => {
-        this.roleList = r.data.data
-        console.log('role list ' + JSON.stringify(this.roleList))
-        this.getUserRoleRelation() // step4
+      this.$api.get('/rolelist', null, r => {
+        if (r.data.success === true) {
+          this.roleList = r.data.data
+          console.log('role list ' + JSON.stringify(this.roleList))
+          this.getUserRoleRelation() // step4
+        } else {
+          this.$Message.error('Fail! ' + r.data.errorMsg)
+        }
       })
     },
     handleAddUser () {
@@ -285,14 +291,15 @@ export default {
       const user = this.userToAdd
       console.log('To post ' + this.userToAdd.role)
       console.log('To post ' + this.userToAdd)
-      this.$refs['addUser'].validate((valid) => {
+      this.$refs.addUser.validate((valid) => {
         if (valid) {
           // this.postData(actInfo)
           this.$api.post('/addUser', this.$qs.stringify({
             role: user.role,
             account: user.account,
             username: user.userName,
-            password: user.password}), r => {
+            password: user.password
+          }), r => {
             if (r.data.success === true) {
               this.addUser = false
               this.$Message.success('Add User Success')
@@ -302,7 +309,7 @@ export default {
               this.$Message.error('Fail! ' + r.errorMsg)
             }
           })
-          this.$refs['addUser'].resetFields()
+          this.$refs.addUser.resetFields()
         } else {
           setTimeout(() => {
             _this.refuseLoading = false
@@ -321,16 +328,16 @@ export default {
       this.openInfo = !this.openInfo
     },
     getUserRoleRelation () {
-      let size = (this.pageSize < this.userNum) ? this.pageSize : this.userNum
+      const size = (this.pageSize < this.userNum) ? this.pageSize : this.userNum
       console.log('size: ' + size)
-      let listIds = new Array(0)
-      for (let item of this.userList) {
+      const listIds = new Array(0)
+      for (const item of this.userList) {
         listIds.push(item.id)
       }
       console.log('Ids to query ' + listIds)
       console.log('JSON stringifyed: ' + JSON.stringify(listIds))
-      console.log('THEN stringifyed: ' + this.$qs.stringify({userIds: JSON.stringify(listIds)}))
-      this.$api.post('/userRoleByIds', this.$qs.stringify({userIds: JSON.stringify(listIds)}), r => {
+      console.log('THEN stringifyed: ' + this.$qs.stringify({ userIds: JSON.stringify(listIds) }))
+      this.$api.post('/userRoleByIds', this.$qs.stringify({ userIds: JSON.stringify(listIds) }), r => {
         r = r.data
         if (r.success === true) {
           console.log('roleRelation ' + r)
@@ -346,7 +353,7 @@ export default {
     },
     insertRoleIntoUserList (roleId, index) {
       // console.log(this.roleList + '  ')
-      for (let item of this.roleList) {
+      for (const item of this.roleList) {
         if (item.id === roleId) {
           this.$set(this.userList[index], 'role', item.roleName)
           this.$set(this.userList[index], 'roleCode', item.roleCode)
@@ -359,7 +366,7 @@ export default {
       this.userToRevise = this.userList[index]
       this.$set(this.userToRevise, 'newPassword', '')
       this.$set(this.userToRevise, 'password', '')
-      let array = []
+      const array = []
       if (this.userToRevise.enabled) {
         array.push('enabled')
       }
@@ -379,7 +386,7 @@ export default {
       const _this = this
       const user = this.userToRevise
       console.log('To post status' + JSON.stringify(user.status))
-      this.$refs['reviseUser'].validate((valid) => {
+      this.$refs.reviseUser.validate((valid) => {
         if (valid) {
           // this.postData(actInfo)
           this.$api.put('/updateUser', this.$qs.stringify({
@@ -388,7 +395,8 @@ export default {
             username: user.userName,
             password: user.password,
             newPassword: user.newPassword,
-            status: JSON.stringify(user.status)}), r => {
+            status: JSON.stringify(user.status)
+          }), r => {
             if (r.data.success === true) {
               this.addUser = false
               this.$Message.success('Update User Success')
@@ -398,7 +406,7 @@ export default {
               this.$Message.error('Fail! ' + r.errorMsg)
             }
           })
-          this.$refs['reviseUser'].resetFields()
+          this.$refs.reviseUser.resetFields()
         } else {
           setTimeout(() => {
             _this.refuseLoading = false
@@ -413,7 +421,7 @@ export default {
       })
     },
     handleDeleteUser (index) {
-      this.$api.delete('/deleteUser', {userId: this.userList[index].id}, r => {
+      this.$api.delete('/deleteUser', { userId: this.userList[index].id }, r => {
         r = r.data
         if (r.success === true) {
           this.$Message.success('Success!')

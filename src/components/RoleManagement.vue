@@ -155,13 +155,13 @@ export default {
       roleToRevise: '',
       ruleInline: {
         name: [
-          {required: true, message: 'Please enter name', trigger: 'change'}
+          { required: true, message: 'Please enter name', trigger: 'change' }
         ],
         code: [
-          {required: true, message: 'Please enter code', trigger: 'change'}
+          { required: true, message: 'Please enter code', trigger: 'change' }
         ],
         description: [
-          {required: true, message: 'Please enter description', trigger: 'change'}
+          { required: true, message: 'Please enter description', trigger: 'change' }
         ]
       }
     }
@@ -176,16 +176,23 @@ export default {
     },
     getRoles () {
       this.$api.get('/role', null, r => {
-        console.log('response ' + r)
-        this.roleList = r.data.data
-        console.log('role list ' + JSON.stringify(this.roleList))
-        this.getRolePermissionRelation() // step2
+        if (r.data.success === true) {
+          this.roleList = r.data.data
+          console.log('role list ' + JSON.stringify(this.roleList))
+          this.getRolePermissionRelation() // step2
+        } else {
+          this.$Message.error('Fail! ' + r.data.errorMsg)
+        }
       })
     },
     getPermission () {
       this.$api.get('/permission', null, r => {
-        this.permissionList = r.data.data
-        console.log('permission list ' + JSON.stringify(this.permissionList))
+        if (r.data.success === true) {
+          this.permissionList = r.data.data
+          console.log('permission list ' + JSON.stringify(this.permissionList))
+        } else {
+          this.$Message.error('Fail! ' + r.data.errorMsg)
+        }
       })
     },
     getRolePermissionRelation () {
@@ -196,14 +203,14 @@ export default {
       }
       // let size = (this.pageSize < this.roleNum) ? this.pageSize : this.roleNum
       // console.log('size: ' + size)
-      let listIds = new Array(0)
-      for (let item of this.roleList) {
+      const listIds = new Array(0)
+      for (const item of this.roleList) {
         listIds.push(item.id)
       }
       console.log('Ids to query ' + listIds)
       console.log('JSON stringifyed: ' + JSON.stringify(listIds))
-      console.log('THEN stringifyed: ' + this.$qs.stringify({roleIds: JSON.stringify(listIds)}))
-      this.$api.post('/rolePermissionByRoleIds', this.$qs.stringify({roleIds: JSON.stringify(listIds)}), r => {
+      console.log('THEN stringifyed: ' + this.$qs.stringify({ roleIds: JSON.stringify(listIds) }))
+      this.$api.post('/rolePermissionByRoleIds', this.$qs.stringify({ roleIds: JSON.stringify(listIds) }), r => {
         r = r.data
         console.log('results ' + JSON.stringify(r))
         if (r.success === true) {
@@ -229,15 +236,17 @@ export default {
         }
       }
       console.log('RoleIndex: ' + RoleIndex)
-      for (let item of this.permissionList) {
+      for (const item of this.permissionList) {
         if (item.id === permissionId) {
           console.log(JSON.stringify(item))
-          this.roleList[RoleIndex].children.push({id: 'Permission: ' + item.id,
+          this.roleList[RoleIndex].children.push({
+            id: 'Permission: ' + item.id,
             roleName: item.permissionName,
             roleCode: item.permissionCode,
             roleDescription: 'Permission id: ' + item.id +
           '\nRecord Id: ' + recordId,
-            recordId: recordId})
+            recordId: recordId
+          })
         }
         console.log(JSON.stringify(this.roleList))
       }
@@ -261,7 +270,8 @@ export default {
       this.$api.post('/role', this.$qs.stringify({
         roleName: this.roleToAdd.roleName,
         roleDescription: this.roleToAdd.roleDescription,
-        roleCode: this.roleToAdd.roleCode}), r => {
+        roleCode: this.roleToAdd.roleCode
+      }), r => {
         if (r.data.success === true) {
           this.$Message.success('Success!')
           this.initiate()
@@ -273,23 +283,23 @@ export default {
     handleAddPermissionToRole (index) {
       this.recordToAdd = this.roleList[index]
       this.$set(this.recordToAdd, 'permissions', [])
-      for (let item of this.recordToAdd.children) {
+      for (const item of this.recordToAdd.children) {
         this.recordToAdd.permissions.push(item.roleCode)
       }
       this.addPermissionToRole = !this.addPermissionToRole
     },
     postRecord () {
       console.log('record to add ' + JSON.stringify(this.recordToAdd))
-      let permissionIds = []
-      for (let record of this.recordToAdd.permissions) {
-        for (let permission of this.permissionList) {
+      const permissionIds = []
+      for (const record of this.recordToAdd.permissions) {
+        for (const permission of this.permissionList) {
           if (record === permission.permissionCode) {
             permissionIds.push(permission.id)
             break
           }
         }
       }
-      this.$api.post('/rolePermissionByPermissionIds', this.$qs.stringify({roleId: this.recordToAdd.id, permissionIds: JSON.stringify(permissionIds)}), r => {
+      this.$api.post('/rolePermissionByPermissionIds', this.$qs.stringify({ roleId: this.recordToAdd.id, permissionIds: JSON.stringify(permissionIds) }), r => {
         if (r.data.success) {
           this.$Message.success('Update Role-Permission Relations Success!')
           this.initiate()
@@ -304,8 +314,8 @@ export default {
       this.reviseRole = !this.reviseRole
     },
     handleRoleRevise () {
-      let data = this.roleToRevise
-      this.$api.put('/role', this.$qs.stringify({id: data.id, roleName: data.roleName, roleDescription: data.roleDescription, roleCode: data.roleCode}), r => {
+      const data = this.roleToRevise
+      this.$api.put('/role', this.$qs.stringify({ id: data.id, roleName: data.roleName, roleDescription: data.roleDescription, roleCode: data.roleCode }), r => {
         r = r.data
         if (r.success === true) {
           this.$Message.success('Revised Role Success !')
@@ -317,8 +327,8 @@ export default {
       })
     },
     handleDeleteRecord (recordId) {
-      console.log('To post record Id: ' + this.$qs.stringify({id: recordId}))
-      this.$api.delete('/rolePermission', {id: recordId}, r => {
+      console.log('To post record Id: ' + this.$qs.stringify({ id: recordId }))
+      this.$api.delete('/rolePermission', { id: recordId }, r => {
         if (r.data.success === true) {
           this.$Message.success('Delete Permission Success!')
           this.initiate()

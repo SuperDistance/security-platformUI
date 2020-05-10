@@ -151,7 +151,7 @@ export default {
           { validator: validateDateRange, trigger: 'change' }
         ],
         memo: [
-          {required: false}
+          { required: false }
         ]
       }
     }
@@ -160,7 +160,7 @@ export default {
     this.getKeys()
   },
   mounted () {
-    let _this = this // 声明一个变量指向Vue实例this，保证作用域一致
+    const _this = this // 声明一个变量指向Vue实例this，保证作用域一致
     this.timer = setInterval(() => {
       _this.current = new Date() // 修改数据date
     }, 1000)
@@ -191,7 +191,7 @@ export default {
   },
   methods: {
     handleVerify () {
-      this.$refs['userInfo'].validate((valid) => {
+      this.$refs.userInfo.validate((valid) => {
         if (valid) {
           this.$Message.success('Success!')
           this.next()
@@ -210,7 +210,8 @@ export default {
         encryMethod: this.userInfo.encryptMethod,
         publicKey: this.userInfo.publicKey,
         cirtiSign: this.signatureOfCir,
-        signature: this.signatureOfText}, r => {
+        signature: this.signatureOfText
+      }, r => {
         r = r.data
         this.result = r.data
         this.next()
@@ -245,11 +246,13 @@ export default {
       this.currentStep += 1
     },
     getData () {
-      this.$api.get('/seminar1/exp42', {issuer: this.userInfo.publisher,
+      this.$api.get('/seminar1/exp42', {
+        issuer: this.userInfo.publisher,
         startTime: this.Certificate.startTime,
         endTime: this.Certificate.endTime,
         encryMethod: this.Certificate.encryptMethod,
-        publicKey: this.userInfo.publicKey}, r => {
+        publicKey: this.userInfo.publicKey
+      }, r => {
         r = r.data
         this.signatureOfCir = r
         this.isFetched = !this.isFetched
@@ -268,7 +271,7 @@ export default {
     getTextSignature () {
       this.textSignatureIsFetched = true
       this.buttonText = '点击重新生成'
-      this.$api.get('/seminar1/exp43', {contents: this.toEncryText}, r => {
+      this.$api.get('/seminar1/exp43', { contents: this.toEncryText }, r => {
         r = r.data
         this.signatureOfText = r
       })

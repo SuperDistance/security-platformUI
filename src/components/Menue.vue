@@ -2,10 +2,10 @@
   <div>
   <Layout class="layout">
     <Header>
-      <Menu mode="horizontal" theme="dark" active-name="1">
-        <div @click = "handleManage">
-        <Icon size=40 type="ios-contacts-outline" class="layout-logo"/>
-        </div>
+      <Menu mode="horizontal" theme="dark" :active-name="1" :open-names="['1']">
+        <MenuItem name="0" to = "/manage">
+          <Icon size=40 type="ios-contacts-outline" class="layout-logo">管理</Icon>
+        </MenuItem>
         <div class="layout-nav">
           <MenuItem name="1" to = "/seminar1">
             <Icon  type="ios-navigate"></Icon>
@@ -15,11 +15,15 @@
             <Icon type="ios-keypad"></Icon>
             研讨三
           </MenuItem>
-          <MenuItem name="2" to = "/seminar4">
-            <Icon type="ios-keypad"></Icon>
+          <MenuItem name="3" to = "/seminar4">
+            <Icon type="logo-buffer" />
             研讨四
           </MenuItem>
-          <MenuItem name="4">
+          <MenuItem name="4" to = "/manage">
+            <Icon type="md-contacts" />
+            管理
+          </MenuItem>
+          <MenuItem name="5">
             <Icon  size=30 type="md-log-out" class="layout-exit" @click = "handleLogout">Exit</Icon>
           </MenuItem>
         </div>
@@ -40,7 +44,7 @@ export default {
           this.$store.commit('del_token')
           this.$store.commit('delUserInfo')
           this.$Message.success('Success: Log out!')
-          this.$router.push({path: '/login'})
+          this.$router.replace('/login')
           document.querySelector('body').removeAttribute('style')// 恢复背景
         } else {
           this.$Message.error('Fail! ' + r.errorMsg)
@@ -48,7 +52,7 @@ export default {
       })
     },
     handleManage () {
-      this.$router.push({path: '/manage'})
+      this.$router.push({ path: '/manage' })
     }
   }
 }
@@ -64,7 +68,6 @@ export default {
   .layout-logo{
     width: 40px;
     height: 40px;
-    background: #f5f7f9;
     border-radius: 100px;
     float: left;
     position: relative;
@@ -72,7 +75,7 @@ export default {
     left: 20px;
   }
   .layout-nav{
-    width: 500px;
+    width: 600px;
     margin: 0 auto;
     margin-right: 20px;
   }

@@ -135,7 +135,7 @@ export default {
   },
   methods: {
     postData () {
-      this.$api.get('/seminar1/exp2', {method: this.messageInfo.category, enc: this.frontendEncryption, iv: this.iv, key: this.publicKey}, r => {
+      this.$api.get('/seminar1/exp2', { method: this.messageInfo.category, enc: this.frontendEncryption, iv: this.iv, key: this.publicKey }, r => {
         r = r.data
         if (r.success === true) {
           this.backendDecryption = r.data[0]
@@ -152,7 +152,7 @@ export default {
       this.postData()
     },
     handleReset () {
-      this.$refs['messageInfo'].resetFields()
+      this.$refs.messageInfo.resetFields()
       this.messageInfo = []
       this.frontendEncryption = ''
       this.frontendTime = ''
@@ -170,7 +170,7 @@ export default {
       console.log('Hex:' + CryptoJS.enc.Hex.stringify(this.publicKey))
     },
     AESCBCDecrypt (text) {
-      let decrypted = CryptoJS.AES.decrypt(CryptoJS.format.Hex.parse(text), CryptoJS.enc.Hex.parse(this.publicKey), {
+      const decrypted = CryptoJS.AES.decrypt(CryptoJS.format.Hex.parse(text), CryptoJS.enc.Hex.parse(this.publicKey), {
         iv: CryptoJS.enc.Hex.parse(this.iv),
         mode: CryptoJS.mode.CBC,
         padding: CryptoJS.pad.Pkcs7

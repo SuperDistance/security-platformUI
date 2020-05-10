@@ -101,10 +101,10 @@ export default {
       ColorList: ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'],
       ruleInline: {
         url: [
-          {required: true, message: 'Please enter url pattern to interceptor', trigger: 'blur'}
+          { required: true, message: 'Please enter url pattern to interceptor', trigger: 'blur' }
         ],
         description: [
-          {required: true, message: 'Please enter description', trigger: 'blur'}
+          { required: true, message: 'Please enter description', trigger: 'blur' }
         ]
       }
     }
@@ -117,7 +117,7 @@ export default {
       this.getPathNum() // step1-2
     },
     getPathList () {
-      this.$api.get('/path', {pageNo: this.pageNo, pageSize: this.pageSize}, r => {
+      this.$api.get('/path', { pageNo: this.pageNo, pageSize: this.pageSize }, r => {
         r = r.data
         if (r.success === true) {
           this.pathList = r.data.records
@@ -133,6 +133,8 @@ export default {
         if (r.success === true) {
           this.pathNum = parseInt(r.data)
           this.getPathList() // step2
+        } else {
+          this.$Message.error('Fail! ' + r.errorMsg)
         }
       })
     },
@@ -148,12 +150,13 @@ export default {
       const _this = this
       const path = this.pathToAdd
       console.log('To post ' + this.pathToAdd)
-      this.$refs['addPath'].validate((valid) => {
+      this.$refs.addPath.validate((valid) => {
         if (valid) {
           // this.postData(actInfo)
           this.$api.post('/path', this.$qs.stringify({
             url: path.url,
-            description: path.description}), r => {
+            description: path.description
+          }), r => {
             if (r.data.success === true) {
               this.addPath = false
               this.$Message.success('Add Path Success')
@@ -163,7 +166,7 @@ export default {
               this.$Message.error('Fail! ' + r.errorMsg)
             }
           })
-          this.$refs['addPath'].resetFields()
+          this.$refs.addPath.resetFields()
         } else {
           setTimeout(() => {
             _this.refuseLoading = false
@@ -189,13 +192,14 @@ export default {
       const _this = this
       const path = this.pathToRevise
       console.log('To post status' + JSON.stringify(path.status))
-      this.$refs['revisePath'].validate((valid) => {
+      this.$refs.revisePath.validate((valid) => {
         if (valid) {
           // this.postData(actInfo)
           this.$api.put('/path', this.$qs.stringify({
             id: path.id,
             url: path.url,
-            description: path.description}), r => {
+            description: path.description
+          }), r => {
             if (r.data.success === true) {
               this.revisePath = false
               this.$Message.success('Update Path Success')
@@ -205,7 +209,7 @@ export default {
               this.$Message.error('Fail! ' + r.errorMsg)
             }
           })
-          this.$refs['revisePath'].resetFields()
+          this.$refs.revisePath.resetFields()
         } else {
           setTimeout(() => {
             _this.refuseLoading = false
@@ -220,7 +224,7 @@ export default {
       })
     },
     handleDeletePath (index) {
-      this.$api.delete('/path', {id: this.pathList[index].id}, r => {
+      this.$api.delete('/path', { id: this.pathList[index].id }, r => {
         r = r.data
         if (r.success === true) {
           this.$Message.success('Success!')

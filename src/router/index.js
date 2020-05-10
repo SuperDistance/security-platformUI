@@ -19,8 +19,8 @@ import XSSInjection from '../components/XSSInjection'
 
 import seminarFourBase from '../frame/seminarFour'
 
-import login from '@/page/login'
-import Base from '@/page/base'
+import login from '../page/login'
+import Base from '../page/base'
 
 Vue.use(VueRouter)
 
@@ -66,25 +66,25 @@ const manageRouter = new VueRouter({
 // nested-router 又套了一层
 const seminarOneNested = {
   router: seminarOneRouter,
-  template: `<seminarOneBase> </seminarOneBase>`,
+  template: '<seminarOneBase> </seminarOneBase>',
   components: { seminarOneBase }
 }
 
 const seminarThreeNested = {
   router: seminarThreeRouter,
-  template: `<seminarThreeBase> </seminarThreeBase>`,
+  template: '<seminarThreeBase> </seminarThreeBase>',
   components: { seminarThreeBase }
 }
 
 const seminarFourNested = {
   router: seminarFourRouter,
-  template: `<seminarFourBase> </seminarFourBase>`,
+  template: '<seminarFourBase> </seminarFourBase>',
   components: { seminarFourBase }
 }
 
 const managementNested = {
   router: manageRouter,
-  template: `<manageBase> </manageBase>`,
+  template: '<manageBase> </manageBase>',
   components: { manageBase }
 }
 
@@ -93,7 +93,8 @@ export default new VueRouter({
   mode: 'hash',
   base: __dirname,
   routes: [
-    {path: '/base',
+    {
+      path: '/base',
       component: Base,
       children: [
         { path: '/', redirect: '/seminar1' },

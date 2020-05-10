@@ -33,11 +33,11 @@ export default {
       },
       ruleInline: {
         user: [
-          {required: true, message: 'Please fill in the user name', trigger: 'blur'}
+          { required: true, message: 'Please fill in the user name', trigger: 'blur' }
         ],
         password: [
-          {required: true, message: 'Please fill in the password.', trigger: 'blur'},
-          {type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur'}
+          { required: true, message: 'Please fill in the password.', trigger: 'blur' },
+          { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
         ]
       }
     }
@@ -54,7 +54,7 @@ export default {
     },
     login (form) {
       if (form === undefined) {
-        form = {username: this.formInline.user, password: this.formInline.password}
+        form = { username: this.formInline.user, password: this.formInline.password }
       }
       console.log('data to post: ' + form)
       this.$api.post('/login', form, r => {
@@ -64,17 +64,17 @@ export default {
           document.querySelector('body').setAttribute('style', 'background:#fff')// 背景变白
           // this.$store.commit('setUserInfo', r.data.username)
           if (this.$store.state.token !== '') {
-            this.$router.push({path: '/base'})
+            this.$router.push({ path: '/base' })
             this.$Message.success('Success!')
           }
         } else {
           this.$Message.error('Fail! ' + r.data.errorMsg)
-          this.$router.replace({path: '/login'})
+          this.$router.replace({ path: '/login' })
         }
       })
     },
     handleVisitor () {
-      this.login({username: 'user1', password: '123456'})
+      this.login({ username: 'user1', password: '123456' })
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>留言板</h1>
+    <h1><Icon type="ios-chatbubbles" />留言板</h1>
     <List>
       <ListItem v-for="(item, index) in messageArray" :key="index">
         <Col span=6>
@@ -34,7 +34,7 @@ export default {
   name: 'XSSInjection',
   data () {
     return {
-      test: `<a onclick='alert("xss攻击")'>链接</a>`,
+      test: '<a onclick=\'alert("xss攻击")\'>链接</a>',
       test2: '<script>alert("xss")',
       messageToAdd: {
         content: ''
@@ -53,7 +53,7 @@ export default {
         this.messageArray.splice(0, this.messageArray.length)
         if (r.success === true) {
           this.$Message.success('Success!')
-          for (let item of r.data) {
+          for (const item of r.data) {
             console.log('data ' + JSON.stringify(item))
             this.messageArray.splice(this.messageArray.length, 0, item)
           }

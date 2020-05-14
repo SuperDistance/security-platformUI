@@ -4,12 +4,12 @@
 // var root = './static/'
 import store from '../store'
 
-var root = 'http://localhost:8090'
+var root = 'http://localhost:8085'
 // build
 // 引用axios
 const CryptoJS = require('crypto-js')
 
-var axios = require('axios')
+const axios = require('axios')
 
 axios.interceptors.request.use(
   config => {

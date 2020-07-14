@@ -6,7 +6,7 @@
         <Button v-if="!isNaN(row.id)" type="success" size="small" style="margin-right: 5px" @click="handleAddPermissionToRole(index)"><h3>   +   </h3></Button>
         <Button v-if="!isNaN(row.id)" type="primary" size="small" style="margin-right: 5px" @click="handleReviseRole(index)">Revise</Button>
         <Button v-if="isNaN(row.id)" type="error" size="small" @click="handleDeleteRecord(row.recordId)">Delete</Button>
-        <Button v-else type="error" size="small" @click="async(index)">Delete</Button>
+        <Button v-else type="error" size="small" @click="handleDeleteRole(index)">Delete</Button>
       </template>
     </Table>
 
@@ -331,6 +331,16 @@ export default {
       this.$api.delete('/rolePermission', { id: recordId }, r => {
         if (r.data.success === true) {
           this.$Message.success('Delete Permission Success!')
+          this.initiate()
+        } else {
+          this.$Message.error('Fail! ' + r.data.errorMsg)
+        }
+      })
+    },
+    handleDeleteRole (roleIndex) {
+      this.$api.delete('/role', { id: this.roleList[roleIndex].id }, r => {
+        if (r.data.success === true) {
+          this.$Message.success('Delete Role Success!')
           this.initiate()
         } else {
           this.$Message.error('Fail! ' + r.data.errorMsg)

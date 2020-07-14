@@ -6,7 +6,7 @@
       <Button v-if="!isNaN(row.id)" type="success" size="small" style="margin-right: 5px" @click="handleAddPathToPermission(index)"><h3>   +   </h3></Button>
       <Button v-if="!isNaN(row.id)" type="primary" size="small" style="margin-right: 5px" @click="handleRevisePermission(index)">Revise</Button>
       <Button v-if="isNaN(row.id)" type="error" size="small" @click="handleDeleteRecord(row.recordId)">Delete</Button>
-      <Button v-else type="error" size="small" @click="async(index)">Delete</Button>
+      <Button v-else type="error" size="small" @click="handleDeletePermission(index)">Delete</Button>
     </template>
   </Table>
 
@@ -306,6 +306,16 @@ export default {
       this.$api.delete('/pathPermission', { id: recordId }, r => {
         if (r.data.success === true) {
           this.$Message.success('Delete Path Success!')
+          this.initiate()
+        } else {
+          this.$Message.error('Fail! ' + r.data.errorMsg)
+        }
+      })
+    },
+    handleDeletePermission (PermissionId) {
+      this.$api.delete('/permission', { id: this.permissionList[PermissionId].id }, r => {
+        if (r.data.success === true) {
+          this.$Message.success('Delete Permission Success!')
           this.initiate()
         } else {
           this.$Message.error('Fail! ' + r.data.errorMsg)
